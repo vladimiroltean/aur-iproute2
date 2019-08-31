@@ -2,8 +2,8 @@
 # Contributor: Ronald van Haren <ronald.archlinux.org>
 # Contributor: Judd Vinet <jvinet@zeroflux.org>
 
-pkgname=iproute2-git
-pkgver=4.2.0.r44.g8fe9839
+pkgname=iproute2-next
+pkgver=next
 pkgrel=1
 pkgdesc='IP Routing Utilities - git checkout'
 arch=('i686' 'x86_64')
@@ -13,14 +13,14 @@ depends=('glibc' 'iptables' 'libmnl')
 makedepends=('git' 'linux-atm')
 optdepends=('linux-atm: ATM support')
 provides=('iproute2')
-conflicts=('iproute2' 'iproute')
+conflicts=('iproute2' 'iproute' 'iproute2-git')
 backup=('etc/iproute2/ematch_map' 'etc/iproute2/rt_dsfield' 'etc/iproute2/rt_protos' \
 	'etc/iproute2/rt_realms' 'etc/iproute2/rt_scopes' 'etc/iproute2/rt_tables')
-source=('git://git.kernel.org/pub/scm/linux/kernel/git/shemminger/iproute2.git')
+source=('git://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git')
 sha256sums=('SKIP')
 
 pkgver() {
-	cd iproute2/
+	cd ${pkgname}
 
 	if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
 		printf '%s.r%s.g%s' \
@@ -35,21 +35,20 @@ pkgver() {
 }
 
 prepare() {
-	cd iproute2/
+	cd ${pkgname}
 
 	# do not treat warnings as errors
 	sed -i 's/-Werror//' Makefile
 }
 
 build() {
-	cd iproute2/
+	cd ${pkgname}
 
 	./configure
 }
 
 package() {
-	cd iproute2/
+	cd ${pkgname}
 
 	make DESTDIR="${pkgdir}" SBINDIR="/usr/bin/" install
 }
-
